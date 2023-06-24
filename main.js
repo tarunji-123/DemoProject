@@ -27,6 +27,7 @@ function fetchData() {
       response.data.forEach((item) => {
         var li = document.createElement('li');
         li.className = "item";
+        li.dataset.userId = item._id;
 
         var delBtn = document.createElement('input');
         delBtn.type = "button";
@@ -111,8 +112,18 @@ function handleItemClick(e) {
 function removeItem(e) {
   if (confirm('Are you sure?')) {
     var li = e.target.parentElement;
-    var email = li.childNodes[1].textContent.substring(1);
-    items.removeChild(li);
+    // var email = li.childNodes[1].textContent.substring(1);
+    var userId = li.dataset.userId;
+
+    axios
+    .delete(`https://crudcrud.com/api/b484d03bc805468ba8291e70444c2f3b/BookAppointment/${userId}`)
+    .then(()=>{
+      items.removeChild(li);
+      console.log("User successfully deleted");
+    })
+    .catch((error)=>{
+      console.log(error);
+    })
     // localStorage.removeItem(email);
     form.reset();
   }
