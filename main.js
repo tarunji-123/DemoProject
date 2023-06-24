@@ -6,8 +6,51 @@ var nameInput = document.getElementById('name');
 var emailInput = document.getElementById('email');
 var phoneInput = document.getElementById('phone');
 
-form.addEventListener('submit', addItems);
+// form.addEventListener('submit', addItems);
+form.addEventListener('submit', function(e) {
+  addItems(e);
+  fetchData(); // Fetch data after adding a new item
+});
 items.addEventListener('click', handleItemClick);
+window.addEventListener('load', function() {
+  fetchData(); // Fetch data when the page loads
+});
+
+function fetchData() {
+  axios
+    .get("https://crudcrud.com/api/b484d03bc805468ba8291e70444c2f3b/BookAppointment")
+    .then((response) => {
+      // Clear existing items
+      items.innerHTML = "";
+
+      // Loop through the response data and create list items
+      response.data.forEach((item) => {
+        var li = document.createElement('li');
+        li.className = "item";
+
+        var delBtn = document.createElement('input');
+        delBtn.type = "button";
+        delBtn.value = "Delete User";
+        delBtn.className = "delete mx-2";
+
+        var editBtn = document.createElement('input');
+        editBtn.type = "button";
+        editBtn.value = "Edit User";
+        editBtn.className = "edit mx-2";
+
+        li.appendChild(document.createTextNode(item.name));
+        li.appendChild(document.createTextNode("-" + item.email));
+        li.appendChild(document.createTextNode("-" + item.phone));
+        li.appendChild(delBtn);
+        li.appendChild(editBtn);
+
+        items.appendChild(li);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 
 function addItems(e) {
   e.preventDefault();
@@ -16,38 +59,18 @@ function addItems(e) {
   var email = emailInput.value;
   var phone = phoneInput.value;
 
-  // if (editMode) {
-  //   editedItem.firstChild.textContent = name;
-  //   editedItem.childNodes[1].textContent = "-" + email;
-  //   editedItem.childNodes[2].textContent = "-" + phone;
-
-  //   var previousEmail = editedItem.dataset.email;
-  //   localStorage.removeItem(previousEmail);
-  //   editedItem.dataset.email = email;
-
-  //   let myObj = {
-  //     name: name,
-  //     email: email,
-  //     phone: phone,
-  //   }
-  //   let myObj_serialized = JSON.stringify(myObj);
-  //   localStorage.setItem(email, myObj_serialized);
-
-  //   editMode = false;
-  //   editedItem = null;
-  // } else {
     var li = document.createElement('li');
     li.className = "item";
 
     var delBtn = document.createElement('input');
     delBtn.type = "button";
     delBtn.value = "Delete User";
-    delBtn.className = "delete";
+    delBtn.className = "delete mx-2";
 
     var editBtn = document.createElement('input');
     editBtn.type = "button";
     editBtn.value = "Edit User";
-    editBtn.className = "edit";
+    editBtn.className = "edit mx-2";
 
     li.appendChild(document.createTextNode(name));
     li.appendChild(document.createTextNode("-" + email));
@@ -55,9 +78,6 @@ function addItems(e) {
     li.appendChild(delBtn);
     li.appendChild(editBtn);
 
-    // li.dataset.email = email;
-
-    
     let myObj = {
       name: name,
       email: email,
@@ -93,31 +113,29 @@ function removeItem(e) {
     var li = e.target.parentElement;
     var email = li.childNodes[1].textContent.substring(1);
     items.removeChild(li);
-    localStorage.removeItem(email);
+    // localStorage.removeItem(email);
     form.reset();
   }
 }
 
 function editItem(e) {
-  // editMode = true;
+
   var editedItem = e.target.parentElement;
   var name = editedItem.firstChild.textContent;
   var email = editedItem.childNodes[1].textContent.substring(1);
   var phone = editedItem.childNodes[2].textContent.substring(2);
 
-  // document.getElementById('name').value = name;
-  // document.getElementById('email').value = email;
-  // document.getElementById('phone').value = phone;
+
   nameInput.value = name;
   emailInput.value = email;
   phoneInput.value = phone;
 
   editedItem.remove();
 
-  var storedItem = localStorage.getItem(email);
-    if(storedItem){
-      localStorage.removeItem(email);
-    }
+  // var storedItem = localStorage.getItem(email);
+  //   if(storedItem){
+  //     localStorage.removeItem(email);
+  //   }
   
 
 
