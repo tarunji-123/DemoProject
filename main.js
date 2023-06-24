@@ -18,7 +18,7 @@ window.addEventListener('load', function() {
 
 function fetchData() {
   axios
-    .get("https://crudcrud.com/api/b484d03bc805468ba8291e70444c2f3b/BookAppointment")
+    .get("https://crudcrud.com/api/bd7a8daba05f4f07aa4e9bb9cca56637/BookAppointment")
     .then((response) => {
       // Clear existing items
       items.innerHTML = "";
@@ -86,7 +86,7 @@ function addItems(e) {
     }
     
     axios
-    .post("https://crudcrud.com/api/b484d03bc805468ba8291e70444c2f3b/BookAppointment",myObj)
+    .post("https://crudcrud.com/api/bd7a8daba05f4f07aa4e9bb9cca56637/BookAppointment",myObj)
     .then((respone)=>{
         items.appendChild(li);
         console.log(respone);
@@ -101,6 +101,8 @@ function addItems(e) {
   form.reset();
 }
 
+
+
 function handleItemClick(e) {
   if (e.target.classList.contains('delete')) {
     removeItem(e);
@@ -112,11 +114,11 @@ function handleItemClick(e) {
 function removeItem(e) {
   if (confirm('Are you sure?')) {
     var li = e.target.parentElement;
-    // var email = li.childNodes[1].textContent.substring(1);
+    var email = li.childNodes[1].textContent.substring(1);
     var userId = li.dataset.userId;
 
     axios
-    .delete(`https://crudcrud.com/api/b484d03bc805468ba8291e70444c2f3b/BookAppointment/${userId}`)
+    .delete(`https://crudcrud.com/api/bd7a8daba05f4f07aa4e9bb9cca56637/BookAppointment/${userId}`)
     .then(()=>{
       items.removeChild(li);
       console.log("User successfully deleted");
@@ -129,25 +131,27 @@ function removeItem(e) {
   }
 }
 
-function editItem(e) {
 
+
+function editItem(e) {
   var editedItem = e.target.parentElement;
   var name = editedItem.firstChild.textContent;
   var email = editedItem.childNodes[1].textContent.substring(1);
   var phone = editedItem.childNodes[2].textContent.substring(2);
-
+  var userId = editedItem.dataset.userId;
 
   nameInput.value = name;
   emailInput.value = email;
   phoneInput.value = phone;
 
-  editedItem.remove();
-
-  // var storedItem = localStorage.getItem(email);
-  //   if(storedItem){
-  //     localStorage.removeItem(email);
-  //   }
+  axios
+    .delete(`https://crudcrud.com/api/bd7a8daba05f4f07aa4e9bb9cca56637/BookAppointment/${userId}`)
+    .then(()=>{
+      items.removeChild(editedItem);
+      
+    })
+    .catch((error)=>{
+      console.log(error);
+    })
   
-
-
 }
