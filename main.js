@@ -1,29 +1,27 @@
 var form = document.getElementById('my-form');
 var items = document.getElementById('items');
-// var editMode = false;
-// var editedItem = null;
+
 var nameInput = document.getElementById('name');
 var emailInput = document.getElementById('email');
 var phoneInput = document.getElementById('phone');
 
-// form.addEventListener('submit', addItems);
+
 form.addEventListener('submit', function(e) {
   addItems(e);
-  fetchData(); // Fetch data after adding a new item
+  fetchData(); 
 });
 items.addEventListener('click', handleItemClick);
 window.addEventListener('load', function() {
-  fetchData(); // Fetch data when the page loads
+  fetchData(); 
 });
 
 function fetchData() {
   axios
     .get("https://crudcrud.com/api/bd7a8daba05f4f07aa4e9bb9cca56637/BookAppointment")
     .then((response) => {
-      // Clear existing items
+      
       items.innerHTML = "";
 
-      // Loop through the response data and create list items
       response.data.forEach((item) => {
         var li = document.createElement('li');
         li.className = "item";
